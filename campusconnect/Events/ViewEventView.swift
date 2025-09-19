@@ -14,6 +14,8 @@ struct ViewEventView: View {
     @StateObject private var favoritesManager = FavoritesManager.shared
     private let width = UIScreen.main.bounds.width - 32
 
+    @State private var cameraPosition: MapCameraPosition = .automatic
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
@@ -53,11 +55,19 @@ struct ViewEventView: View {
                         Text(description)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal)
+
+                        // In‑app Map Preview (with pin)
+                        Map(position: $cameraPosition) {
+                            Marker(title, coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
+                        }
+                        .frame(height: 220)
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .padding(.horizontal)
+                        .accessibilityLabel("Map preview for \(title) at \(venue)")
                     }
                     .padding(.bottom, 16)
                 }
 
-                // Sticky Go to Location Button
                 CustomButton(
                     title: "Go to Event Location",
                     backgroundColor: Color.blue,
@@ -87,12 +97,9 @@ struct ViewEventView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        print("💖 Heart button tapped for event: \(title)")
                         if favoritesManager.isEventFavorited(title) {
-                            print("🗑️ Removing event from favorites")
                             favoritesManager.removeEventFromFavorites(title)
                         } else {
-                            print("➕ Adding event to favorites")
                             favoritesManager.addEventToFavoritesByName(title)
                         }
                     }) {
@@ -102,9 +109,17 @@ struct ViewEventView: View {
                 }
             }
         }
+        .onAppear {
+            let coord = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+            let region = MKCoordinateRegion(
+                center: coord,
+                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+            )
+            cameraPosition = .region(region)
+        }
     }
 
-    // Function to open the default map app with the event's coordinates
+    // func to open the default map app with coordinates
     func openMapWithCoordinates(latitude: Double, longitude: Double) {
         let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
         let regionSpan = MKCoordinateRegion(
