@@ -10,7 +10,7 @@ class FavoritesManager: ObservableObject {
     @Published var favoriteEventIds: Set<String> = []
 
     private let communityKey = "favoriteCommunityIds"
-    private let eventKey = "favoriteEventIds"         // used only for one-time migrat
+    private let eventKey = "favoriteEventIds"
     private let ctx: NSManagedObjectContext
 
     private init() {
@@ -59,10 +59,7 @@ class FavoritesManager: ObservableObject {
         return hasFavorite(key: eventIdOrTitle, kind: "event")
     }
 
-    // selection helpers (unchanged behavior)
     func getFavoriteCommunities(from allCommunities: [Community]) -> [Community] {
-        // preserves your current “match by name/title” behavior for now
-        // (you can switch to ID when your views start passing IDs)
         return allCommunities.filter { favoriteCommunityIds.contains($0.name) || favoriteCommunityIds.contains($0.id.uuidString) }
     }
 

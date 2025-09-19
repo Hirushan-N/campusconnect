@@ -1,10 +1,3 @@
-//
-//  FavoritesView.swift
-//  campusconnect
-//
-//  Created by Gihan Sudeepa on 2025-03-08.
-//
-
 import SwiftUI
 
 struct FavoritesView: View {
