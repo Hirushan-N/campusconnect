@@ -1,9 +1,3 @@
-//
-//  CustomTextField.swift
-//  campusconnect
-//
-//
-
 import SwiftUI
 
 struct CustomTextField: View {
@@ -13,46 +7,69 @@ struct CustomTextField: View {
     var textColor: Color
     var borderColor: Color
     var isMultiline: Bool = false
-    
+
+    @ScaledMetric(relativeTo: .body) private var vPad: CGFloat = 12
+    @ScaledMetric(relativeTo: .body) private var hPad: CGFloat = 14
+    @ScaledMetric(relativeTo: .body) private var cornerRadius: CGFloat = 10
+    @ScaledMetric(relativeTo: .body) private var multilineHeight: CGFloat = 200
+
     var body: some View {
         if isMultiline {
-            TextEditor( text: $text)
-                .padding()
+            TextEditor(text: $text)
+                .font(.body)
+                .padding(EdgeInsets(top: vPad, leading: hPad, bottom: vPad, trailing: hPad))
                 .background(backgroundColor)
                 .foregroundColor(textColor)
-                .cornerRadius(10)
+                .cornerRadius(cornerRadius)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: cornerRadius)
                         .stroke(borderColor, lineWidth: 1)
                 )
-                .frame(height: 200)
+                .frame(height: multilineHeight)
                 .padding(.horizontal)
+                .textInputAutocapitalization(.sentences)
         } else {
             TextField(placeholder, text: $text)
-                .padding()
+                .font(.body)
+                .padding(EdgeInsets(top: vPad, leading: hPad, bottom: vPad, trailing: hPad))
                 .background(backgroundColor)
                 .foregroundColor(textColor)
-                .cornerRadius(10)
+                .cornerRadius(cornerRadius)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
+                    RoundedRectangle(cornerRadius: cornerRadius)
                         .stroke(borderColor, lineWidth: 1)
                 )
                 .padding(.horizontal)
+                .textInputAutocapitalization(.none)
+                .autocorrectionDisabled(false)
         }
     }
 }
 
-
 // Preview
 struct CustomTextField_Previews: PreviewProvider {
     static var previews: some View {
-        CustomTextField(
-            text: .constant(""),
-            placeholder: "Enter Email",
-            backgroundColor: Color(.systemGray6),
-            textColor: .black,
-            borderColor: .gray
-        )
-        .previewLayout(.sizeThatFits)
+        Group {
+            CustomTextField(
+                text: .constant(""),
+                placeholder: "Enter Email",
+                backgroundColor: Color(.systemGray6),
+                textColor: .primary,
+                borderColor: .gray
+            )
+            .previewLayout(.sizeThatFits)
+            .previewDisplayName("Default")
+
+            CustomTextField(
+                text: .constant(""),
+                placeholder: "Enter Email",
+                backgroundColor: Color(.systemGray6),
+                textColor: .primary,
+                borderColor: .gray
+            )
+            .environment(\.dynamicTypeSize, .accessibility3)
+            .previewLayout(.sizeThatFits)
+            .previewDisplayName("Large Text")
+        }
     }
 }

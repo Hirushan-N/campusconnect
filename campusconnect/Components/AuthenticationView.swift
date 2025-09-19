@@ -1,9 +1,3 @@
-//
-//  AuthenticationView.swift
-//  campusconnect
-//
-//
-
 import SwiftUI
 
 struct AuthenticationView: View {
@@ -12,26 +6,27 @@ struct AuthenticationView: View {
     var body: some View {
         Group {
             if authManager.isAuthenticated {
-                // Main app content
-                NavigationStack {
-                    HomeView()
-                }
+                NavigationStack { HomeView() }
             } else {
-                // Login screen
                 LoginView()
             }
         }
         .onAppear {
-            // Check if user is already authenticated (for app launch)
-            // In a real app, you might want to check for stored authentication state
-            // For now, we'll start with authentication required
+            // Auth state checks as needed
         }
     }
 }
 
-// Preview
+// Previews
 struct AuthenticationView_Previews: PreviewProvider {
     static var previews: some View {
-        AuthenticationView()
+        Group {
+            AuthenticationView()
+                .previewDisplayName("Default")
+
+            AuthenticationView()
+                .environment(\.dynamicTypeSize, .accessibility3)
+                .previewDisplayName("Large Text")
+        }
     }
 }
