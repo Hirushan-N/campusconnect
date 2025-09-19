@@ -1,9 +1,3 @@
-//
-//  FindCommunitiesView.swift
-//  campusconnect
-//
-//
-
 import SwiftUI
 
 struct FindCommunitiesView: View {
@@ -14,7 +8,6 @@ struct FindCommunitiesView: View {
         GridItem(.flexible(), spacing: 2)
     ]
     
-    // Function to filter communities based on search text
     private func filterCommunities(searchText: String) -> [Community] {
         if searchText.isEmpty {
             return popularCommunities
@@ -36,11 +29,13 @@ struct FindCommunitiesView: View {
                         text: $searchText,
                         placeholder: "Search By Name or Tag",
                         backgroundColor: Color(.systemGray6),
-                        textColor: .black,
+                        textColor: .primary,
                         borderColor: .gray
                     )
                     .padding(.top, 20)
-                    
+                    .accessibilityLabel("Search by name or tag")
+                    .accessibilityHint("Type a community name or a tag to filter the list")
+
                     // Use filterCommunities method here
                     let filteredCommunities = filterCommunities(searchText: searchText)
                     
@@ -58,7 +53,7 @@ struct FindCommunitiesView: View {
                             )
                             
                             NavigationLink(destination: destinationView) {
-                                VStack {
+                                VStack(spacing: 6) {
                                     AsyncImage(url: URL(string: community.photoURL)) { image in
                                         image.resizable()
                                     } placeholder: {
@@ -66,20 +61,28 @@ struct FindCommunitiesView: View {
                                     }
                                     .frame(width: width, height: width)
                                     .cornerRadius(10)
-                                    
+                                    .accessibilityHidden(true)
                                     Text(community.name)
-                                        .foregroundColor(.black)
+                                        .font(.headline)
                                         .bold()
+                                        .foregroundColor(.primary)
+                                        .multilineTextAlignment(.center)
+                                        .lineLimit(2)
+                                        .minimumScaleFactor(0.85)
                                         .frame(maxWidth: .infinity)
+                                        .accessibilityLabel("\(community.name)")
                                 }
+                                .accessibilityElement(children: .combine)
+                                .accessibilityHint("Opens \(community.name) details")
                             }
+                            .accessibilityIdentifier("community_\(community.id.uuidString)")
                         }
 
                     }
                     .padding(10)
                 }
             }
-            .navigationTitle("Find Communities")
+            .navigationTitle("Communities")
         }
     }
 }
