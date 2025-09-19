@@ -39,9 +39,8 @@ struct ViewCommunityView: View {
                         .cornerRadius(15)
                         .padding()
 
-                        // About Section
                         Text("About")
-                            .font(.system(size: 24))
+                            .font(.title2)
                             .bold()
                             .padding(.horizontal)
 
@@ -63,7 +62,7 @@ struct ViewCommunityView: View {
 
                         // Members
                         Text("Members")
-                            .font(.headline)
+                            .font(.headline) // Dynamic Type–aware
                             .padding(.horizontal)
 
                         LazyVGrid(columns: columns, spacing: 20) {
@@ -79,7 +78,7 @@ struct ViewCommunityView: View {
                                     .clipShape(Circle())
 
                                     Text(member.name)
-                                        .font(.caption)
+                                        .font(.caption) // Dynamic Type–aware
                                 }
                             }
                         }
@@ -87,6 +86,7 @@ struct ViewCommunityView: View {
 
                         // Description
                         Text(description)
+                            .font(.body)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.horizontal)
                     }
